@@ -8,12 +8,55 @@
 body{font-family:Georgia,serif;background:#f4f1ea;margin:0;padding:20px;color:#222}
 #game,#story{max-width:900px;margin:auto}
 .hidden{display:none}
-.board-wrap{display:flex;gap:8px;justify-content:center;align-items:flex-start}
-.board{display:grid;grid-template-columns:repeat(8,60px);grid-template-rows:repeat(8,60px);border:2px solid #333}
-.sq{display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:28px}
+.board-wrap{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    align-items:flex-start;
+}
+ 
+.board{
+    display:grid;
+    grid-template-columns:repeat(8,60px);
+    grid-template-rows:repeat(8,60px);
+    border:3px solid #333;
+    box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+.sq{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:30px;
+    transition:background .15s;
+}
+
+.sq:hover{
+    filter:brightness(1.08);
+}
+
+.coords-y{
+    display:grid;
+    grid-template-rows:repeat(8,60px);
+    align-items:center;
+    width:20px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.coords-x{
+    display:grid;
+    grid-template-columns:repeat(8,60px);
+    width:480px;
+    margin-top:6px;
+    margin-left:0;
+    text-align:center;
+    font-weight:bold;
+}
+
 .light{background:#f0d9b5}.dark{background:#b58863}
-.coords-y{display:grid;grid-template-rows:repeat(8,60px);align-items:center}
-.coords-x{display:grid;grid-template-columns:repeat(8,60px);margin-left:28px;text-align:center}
+
+
 .task{font-size:1.2em;font-weight:bold;margin-bottom:15px;text-align:center}
 .card{background:white;padding:24px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.15);line-height:1.7}
 button,a.btn{display:inline-block;margin-top:20px;padding:12px 20px;background:#333;color:#fff;text-decoration:none;border:none;border-radius:8px;cursor:pointer}
