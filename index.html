@@ -3,181 +3,127 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Awaryjne zadanie szachowe</title>
-
+<title>Szachy – Elias Wren</title>
 <style>
-body{
-    font-family: Arial, sans-serif;
-    text-align:center;
-    background:#f5f5f5;
-    margin:20px;
-}
-
-h1{
-    color:#333;
-}
-
-#instruction{
-    font-size:1.3rem;
-    margin:15px;
-    font-weight:bold;
-}
-
-#message{
-    min-height:30px;
-    margin:10px;
-    font-size:1.1rem;
-}
-
-.board{
-    width:400px;
-    height:400px;
-    margin:auto;
-    display:grid;
-    grid-template-columns:repeat(8,1fr);
-    border:3px solid #333;
-}
-
-.square{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:bold;
-    cursor:pointer;
-    user-select:none;
-}
-
-.light{
-    background:#f0d9b5;
-}
-
-.dark{
-    background:#b58863;
-}
-
-.current{
-    outline:4px solid red;
-}
-
-.meta{
-    background:#4caf50 !important;
-    color:white;
-}
+body{font-family:Georgia,serif;background:#f4f1ea;margin:0;padding:20px;color:#222}
+#game,#story{max-width:900px;margin:auto}
+.hidden{display:none}
+.board-wrap{display:flex;gap:8px;justify-content:center;align-items:flex-start}
+.board{display:grid;grid-template-columns:repeat(8,60px);grid-template-rows:repeat(8,60px);border:2px solid #333}
+.sq{display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:28px}
+.light{background:#f0d9b5}.dark{background:#b58863}
+.coords-y{display:grid;grid-template-rows:repeat(8,60px);align-items:center}
+.coords-x{display:grid;grid-template-columns:repeat(8,60px);margin-left:28px;text-align:center}
+.task{font-size:1.2em;font-weight:bold;margin-bottom:15px;text-align:center}
+.card{background:white;padding:24px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.15);line-height:1.7}
+button,a.btn{display:inline-block;margin-top:20px;padding:12px 20px;background:#333;color:#fff;text-decoration:none;border:none;border-radius:8px;cursor:pointer}
 </style>
 </head>
 <body>
-
-<h1>♟️ Zadanie awaryjne</h1>
-
-<div id="instruction"></div>
-<div id="message"></div>
-
+<div id="game">
+<div class="task" id="task"></div>
+<div class="board-wrap">
+<div class="coords-y" id="cy"></div>
+<div>
 <div class="board" id="board"></div>
+<div class="coords-x" id="cx"></div>
+</div>
+</div>
+</div>
+
+<div id="story" class="hidden">
+<div class="card">
+<div id="text"></div>
+<div id="action"></div>
+</div>
+</div>
 
 <script>
-
-const path = [
-    "A1",
-    "D1",
-    "F3",
-    "F8",
-    "E6",
-    "C4"
+const tasks=[
+"Wykonaj 3 ruchy wieżą",
+"Wykonaj 2 ruchy gońcem",
+"Wykonaj 5 ruchów wieżą",
+"Wykonaj 1 ruch koniem",
+"Wykonaj 2 ruchy gońcem"
 ];
 
-const instructions = [
-    "Start na A1",
-    "Wykonaj 3 ruchy wieżą",
-    "Wykonaj 2 ruchy skoczkiem",
-    "Wykonaj 5 ruchów wieżą",
-    "Wykonaj 1 ruch koniem",
-    "Wykonaj 2 ruchy skoczkiem"
-];
+const path=["A1","D1","F3","F8","E6"];
+let stage=0,current="A1";
 
-let stage = 1;
+const texts={
+A1:`Jeżeli dotarłeś do tej planszy, oznacza to, że biblioteka Cię nie pochłonęła. To dobry początek.<br><br>Przez lata obserwowałem ludzi grających tutaj Większość z nich była przekonana, że wygrywa ten, kto rusza się najwięcej.<br><br>Nigdy nie byłem tego taki pewien.<br><br>Dziś nie interesuje mnie zwycięstwo.<br><br>Interesuje mnie decyzja.<br><br>Wykonaj trzy ruchy wieżą.<br><br>A potem zadaj sobie pytanie: <br><br>czy wybrałeś drogę dlatego, że była właściwa...<br><br>czy dlatego, że była najprostsza?<br><br> -E.W.`,
+D1:`Jeżeli znalazłeś się tutaj, oznacza to, że podjąłeś pierwszą decyzję.<br><br>Większość ludzi nie zauważa, jak wiele można o nich powiedzieć<br><br>po pierwszym ruchu. Ja również kiedyś sądziłem,<br><br>że najważniejsze jest miejsce, do którego zmierzamy.<br><br>Dziś wiem, że znacznie ciekawsze jest to,<br><br>dlaczego obraliśmy właśnie tę drogę. <br><br>Wykonaj dwa ruchy gońcem. <br><br>Nie spiesz się. <br><br>Goniec od wieków nagradza cierpliwych i zawstydza pewnych siebie.<br><br>— E.W.`,
+F3:`Jeżeli dotarłeś do tego miejsca,<br><br>oznacza to, że ponownie poruszasz się <br><br> po przewidywalnym torze. <br><br> To wcale nie jest wada. <br><br> Przez długi czas uważałem, że postęp wymaga ciągłego<br><br>  odkrywania nowych dróg.<br><br>  Później zrozumiałem coś znacznie ważniejszego. <br><br> Niektóre z najważniejszych rzeczy osiąga się dzięki konsekwencji.<br><br>Nie dzięki błyskotliwości. <br><br> Nie dzięki szczęściu. <br><br> Po prostu dzięki temu, że wykonuje się kolejny krok. <br><br> A potem następny. I jeszcze jeden. <br><br> Większość kronik opisuje wielkie odkrycia.<br><br> Znacznie rzadziej wspomina o tysiącach godzin, <br><br>które do nich prowadziły. To dość niesprawiedliwe. <br><br>Wykonaj pięć ruchów wieżą.<br><br>Nie szukaj skrótów. <br><br>Tym razem liczy się droga. <br><br> — Elias Wren`,
+F8:`Dotarłeś tutaj? Dobrze.<br><br>Jeżeli jest jedna rzecz,<br><br>której nauczyły mnie lata spędzone przy Granicy,<br><br>to ta: największe zmiany rzadko zaczynają się od wielkich wydarzeń.<br><br>Zwykle zaczynają się od jednego kroku.<br><br>Jednego pytania.<br><br>Jednej decyzji. <br><br>Jednego człowieka, który postanawia spojrzeć w inną stronę niż wszyscy pozostali.<br><br>To zaskakujące, jak wiele może zmienić pojedynczy ruch.<br><br>Wykonaj jeden ruch koniem.<br><br>Tylko jeden.<br><br>Czasami to wystarcza.<br><br>— Elias Wren`,
+E6:`Jeżeli nadal podążasz właściwą drogą, oznacza to, że zauważyłeś coś,<br><br>czego większość ludzi nie zauważa.<br><br>Wzór.<br><br> To zabawne.<br><br>Przez lata sądziłem, że największym problemem Zakonu jest brak wiedzy. <br><br>Myliłem się. <br><br>Wiedzy mieliśmy aż nadto. Kroniki były pełne faktów. <br><br>Raporty pełne obserwacji. Archiwa pełne odpowiedzi. <br><br>Brakowało nam czegoś znacznie prostszego. <br><br>Odwagi, by połączyć je ze sobą. <br><br>Czasami dwa pozornie niepowiązane elementy tworzą obraz, <br><br>którego nie widać osobno. <br><br>Wykonaj dwa ruchy skoczkiem. <br><br>I pamiętaj: najciekawsze odkrycia rzadko znajdują się tam, <br><br>gdzie początkowo ich szukamy.<br><br>— Elias Wren`,
+META:`Zanim ruszysz dalej, zapamiętaj pole, na którym zakończyłeś swoją drogę.<br><br>Nie przypadkiem kazałem Ci wykonywać kolejne ruchy. <br><br>Większość ludzi uważa, że znaczenie ma wyłącznie cel. <br><br>Ja przez lata nauczyłem się czegoś zupełnie odwrotnego. <br><br>Znaczenie ma również miejsce, w którym ostatecznie stajesz. <br><br>Zachowaj oznaczenie tego pola. <br><br>Jest ważniejsze, niż obecnie przypuszczasz.<br><br>-E.W.`,
+A4:`Jeżeli czytasz tę wiadomość, oznacza to, że podjąłeś decyzję.<br><br> To już więcej, niż robi większość ludzi. <br><br> Niestety nie była to właściwa decyzja. <br><br> Nie przejmuj się. <br><br> Gdybym otrzymywał monetę za każdy popełniony błąd,<br><br>  prawdopodobnie nigdy nie musiałbym pracować. <br><br> Zakon lubi opowiadać historie o Strażnikach, <br><br> którzy zawsze wiedzieli, co robią.<br><br>  Nie wierz im. <br><br> Najlepsi z nas błądzili równie często jak pozostali. <br><br> Po prostu potrafili rozpoznać moment, <br><br> w którym należało zawrócić. <br><br> Spróbuj jeszcze raz. <br><br> I tym razem nie pytaj:<br><br>  „Która droga wygląda najlepiej?” <br><br> Zapytaj: „Dlaczego wybrałem właśnie tę?”<br><br>  To znacznie ciekawsze pytanie. <br><br> — Elias Wren`,
+B3:`To nie jest właściwe pole. <br><br>Nie dlatego, że popełniłeś błąd. <br><br>Dlatego, że jeszcze nie zauważyłeś tego, <br><br>co powinieneś zauważyć.<br><br> Istnieje różnica. <br><br>I jest ona znacznie ważniejsza, niż mogłoby się wydawać. <br><br>Wróć do planszy. <br><br>Spójrz ponownie. <br><br>Nie szukaj odpowiedzi.<br><br> Szukaj wzoru. <br><br>Większość ludzi patrzy na ruch. <br><br>Niewielu patrzy na powód, <br><br>dla którego został wykonany. <br><br>— E.W.`,
+A3:`Jeżeli dotarłeś właśnie tutaj, muszę Ci pogratulować.<br><br> To dokładnie to samo miejsce,<br><br>w którym pomyliłem się za pierwszym razem. <br><br>Naprawdę.<br><br> Nie patrz tak. <br><br>Nie jestem wszechwiedzącym duchem z kronik. <br><br>Po prostu miałem więcej okazji <br><br>do popełniania błędów. <br><br>Wróć o jeden krok.<br><br> I spróbuj jeszcze raz. <br><br>To byłaby moja oficjalna rada. <br><br>Nieoficjalna rada brzmi:<br><br> zrób sobie kawę. <br><br>— Elias Wren`,
+GROUP1:`To był ruch.<br><br>Nie był to jednak właściwy ruch. <br><br>Gdyby rozwiązywanie problemów polegało <br><br>na poruszaniu się w dowolnym kierunku,<br><br> byłbym dziś znacznie mniej zmęczonym człowiekiem. <br><br>Wróć na początek planszy.<br><br> Spróbuj jeszcze raz.<br><br> -E.W.`,
+GROUP2:`Nie każda droga prowadzi do odpowiedzi. <br><br>Ta prowadzi jedynie do kolejnego pytania:<br><br> Dlaczego wybrałeś właśnie ten kierunek? <br><br>Wróć na początek i zastanów się jeszcze raz.<br><br> — Elias Wren`,
+DEFAULT:`Czasami jeden krok wystarczy, <br><br>aby oddalić się od celu bardziej <br><br>niż cały dzień marszu. <br><br>To jest jeden z tych przypadków. <br><br>Wróć do początku.<br><br>-E.W.`
+};
 
-const board = document.getElementById("board");
+const special={A4:'A4',B3:'B3',A3:'A3',H7:'GROUP1',G6:'GROUP1',D7:'GROUP1',G8:'GROUP2',C8:'GROUP2'};
 
-for(let row=8; row>=1; row--){
-    for(let col=0; col<8; col++){
+const board=document.getElementById('board');
+for(let r=8;r>=1;r--){
+ for(let c=0;c<8;c++){
+  const sq=document.createElement('div');
+  const coord=String.fromCharCode(65+c)+r;
+  sq.dataset.coord=coord;
+  sq.className='sq '+(((r+c)%2)?'dark':'light');
+  sq.onclick=()=>clickSq(coord);
+  board.appendChild(sq);
+ }
+}
+for(let r=8;r>=1;r--) cy.innerHTML+=`<div>${r}</div>`;
+for(let c=0;c<8;c++) cx.innerHTML+=`<div>${String.fromCharCode(65+c)}</div>`;
 
-        const letter = String.fromCharCode(65+col);
-        const coord = letter + row;
-
-        const square = document.createElement("div");
-        square.classList.add("square");
-
-        if((row+col)%2===0){
-            square.classList.add("light");
-        }else{
-            square.classList.add("dark");
-        }
-
-        square.dataset.coord = coord;
-        square.textContent = coord;
-
-        square.addEventListener("click",()=>checkMove(coord));
-
-        board.appendChild(square);
-    }
+function draw(){
+ document.querySelectorAll('.sq').forEach(s=>s.textContent='');
+ const el=document.querySelector(`[data-coord="${current}"]`);
+ if(el) el.textContent='●';
+ task.textContent=tasks[Math.min(stage,tasks.length-1)];
 }
 
-function updateBoard(){
-
-    document.querySelectorAll(".square")
-        .forEach(s=>s.classList.remove("current"));
-
-    const currentField = path[stage-1];
-
-    const currentSquare =
-        document.querySelector(`[data-coord="${currentField}"]`);
-
-    if(currentSquare){
-        currentSquare.classList.add("current");
-    }
-
-    if(stage < instructions.length){
-        document.getElementById("instruction").textContent =
-            instructions[stage];
-    }
+function showStory(text,btnLabel,cb){
+ game.classList.add('hidden');
+ story.classList.remove('hidden');
+ textDiv=document.getElementById('text');
+ textDiv.innerHTML=text;
+ action.innerHTML='';
+ const b=document.createElement('button');
+ b.textContent=btnLabel;
+ b.onclick=cb;
+ action.appendChild(b);
 }
 
-function checkMove(clicked){
-
-    if(clicked === path[stage]){
-
-        document.getElementById("message").innerHTML =
-            "✅ Dobrze!";
-
-        stage++;
-
-        if(stage === path.length){
-
-            document.getElementById("instruction").innerHTML =
-                "🏁 META! Gratulacje!";
-
-            document.getElementById("message").innerHTML =
-                "Hasło zdobyte.";
-
-            document.querySelector(
-                `[data-coord="${path[path.length-1]}"]`
-            ).classList.add("meta");
-
-            return;
-        }
-
-        updateBoard();
-
-    } else {
-
-        document.getElementById("message").innerHTML =
-            "❌ Błąd, spróbuj od nowa.";
-    }
+function backToBoard(){
+ story.classList.add('hidden');
+ game.classList.remove('hidden');
+ draw();
 }
 
-updateBoard();
+function resetGame(){
+ stage=0; current='A1'; backToBoard();
+}
 
+function clickSq(coord){
+ if(stage===0 && coord==='D1'){ current='D1'; stage=1; showStory(texts.D1,'Kontynuuj',backToBoard); return; }
+ if(stage===1 && coord==='F3'){ current='F3'; stage=2; showStory(texts.F3,'Kontynuuj',backToBoard); return; }
+ if(stage===2 && coord==='F8'){ current='F8'; stage=3; showStory(texts.F8,'Kontynuuj',backToBoard); return; }
+ if(stage===3 && coord==='E6'){ current='E6'; stage=4; showStory(texts.E6,'Kontynuuj',backToBoard); return; }
+ if(stage===4 && (coord==='C4' || coord==='G4')){
+   showStory(texts.META+`<br><br><a class="btn" href="https://sites.google.com/view/punkt-3-szach/strona-g%C5%82%C3%B3wna">Przejdź dalej</a>`,'Zostań tutaj',backToBoard); return;
+ }
+ let key=special[coord]||'DEFAULT';
+ showStory(texts[key],'Wróć do początku',resetGame);
+}
+
+showStory(texts.A1,'Rozpocznij',backToBoard);
+draw();
 </script>
-
 </body>
 </html>
