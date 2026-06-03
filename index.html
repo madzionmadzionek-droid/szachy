@@ -5,7 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Szachy – Elias Wren</title>
 <style>
-body{font-family:Georgia,serif;background:#f4f1ea;margin:0;padding:20px;color:#222}
+body{
+    font-family:Georgia,serif;
+    background:#f4f1ea;
+    margin:0;
+    padding:10px;
+    color:#222;
+    overflow-x:hidden;
+}
 #game,#story{max-width:900px;margin:auto}
 .hidden{display:none}
 .board-wrap{
@@ -17,17 +24,22 @@ body{font-family:Georgia,serif;background:#f4f1ea;margin:0;padding:20px;color:#2
  
 .board{
     display:grid;
-    grid-template-columns:repeat(8,60px);
-    grid-template-rows:repeat(8,60px);
-    border:3px solid #333;
-    box-shadow:0 4px 12px rgba(0,0,0,.2);
+    grid-template-columns:repeat(8,1fr);
+    grid-template-rows:repeat(8,1fr);
+
+    width:min(calc(100vw - 40px), 500px);
+    max-width:500px;
+
+    aspect-ratio:1/1;
+
+    border:2px solid #333;
 }
-.sq{
-    display:flex;
+.sq{  display:flex;
     align-items:center;
     justify-content:center;
     cursor:pointer;
-    font-size:30px;
+    font-size:clamp(18px,5vw,30px);
+    
     transition:background .15s;
 }
 
@@ -37,20 +49,26 @@ body{font-family:Georgia,serif;background:#f4f1ea;margin:0;padding:20px;color:#2
 
 .coords-y{
     display:grid;
-    grid-template-rows:repeat(8,60px);
+    grid-template-rows:repeat(8,1fr);
+
+    height:calc(100vw - 50px);
+    max-height:500px;
+
     align-items:center;
+
     width:20px;
     text-align:center;
     font-weight:bold;
 }
-
 .coords-x{
     display:grid;
-    grid-template-columns:repeat(8,60px);
-    width:480px;
-    margin-top:6px;
-    margin-left:0;
+    grid-template-columns:repeat(8,1fr);
+
+width:min(calc(100vw - 40px), 500px);
+    max-width:500px;
+
     text-align:center;
+    margin-top:4px;
     font-weight:bold;
 }
 
@@ -60,6 +78,32 @@ body{font-family:Georgia,serif;background:#f4f1ea;margin:0;padding:20px;color:#2
 .task{font-size:1.2em;font-weight:bold;margin-bottom:15px;text-align:center}
 .card{background:white;padding:24px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.15);line-height:1.7}
 button,a.btn{display:inline-block;margin-top:20px;padding:12px 20px;background:#333;color:#fff;text-decoration:none;border:none;border-radius:8px;cursor:pointer}
+@media (max-width:600px){
+
+    body{
+        padding:10px;
+        overflow-x:hidden;
+    }
+
+    .card{
+        padding:18px;
+        font-size:1rem;
+        line-height:1.8;
+    }
+
+    .task{
+        font-size:1.05rem;
+        padding:0 10px;
+    }
+
+    button,
+    a.btn{
+        width:100%;
+        box-sizing:border-box;
+        text-align:center;
+        font-size:1rem;
+    }
+}
 </style>
 </head>
 <body>
