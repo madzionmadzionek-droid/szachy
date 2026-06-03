@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Awaryjne zadanie szachowe</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    text-align:center;
+    background:#f5f5f5;
+    margin:20px;
+}
+
+h1{
+    color:#333;
+}
+
+#instruction{
+    font-size:1.3rem;
+    margin:15px;
+    font-weight:bold;
+}
+
+#message{
+    min-height:30px;
+    margin:10px;
+    font-size:1.1rem;
+}
+
+.board{
+    width:400px;
+    height:400px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(8,1fr);
+    border:3px solid #333;
+}
+
+.square{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    cursor:pointer;
+    user-select:none;
+}
+
+.light{
+    background:#f0d9b5;
+}
+
+.dark{
+    background:#b58863;
+}
+
+.current{
+    outline:4px solid red;
+}
+
+.meta{
+    background:#4caf50 !important;
+    color:white;
+}
+</style>
+</head>
+<body>
+
+<h1>♟️ Zadanie awaryjne</h1>
+
+<div id="instruction"></div>
+<div id="message"></div>
+
+<div class="board" id="board"></div>
+
+<script>
+
+const path = [
+    "A1",
+    "D1",
+    "F3",
+    "F8",
+    "E6",
+    "C4"
+];
+
+const instructions = [
+    "Start na A1",
+    "Wykonaj 3 ruchy wieżą",
+    "Wykonaj 2 ruchy skoczkiem",
+    "Wykonaj 5 ruchów wieżą",
+    "Wykonaj 1 ruch koniem",
+    "Wykonaj 2 ruchy skoczkiem"
+];
+
+let stage = 1;
+
+const board = document.getElementById("board");
+
+for(let row=8; row>=1; row--){
+    for(let col=0; col<8; col++){
+
+        const letter = String.fromCharCode(65+col);
+        const coord = letter + row;
+
+        const square = document.createElement("div");
+        square.classList.add("square");
+
+        if((row+col)%2===0){
+            square.classList.add("light");
+        }else{
+            square.classList.add("dark");
+        }
+
+        square.dataset.coord = coord;
+        square.textContent = coord;
+
+        square.addEventListener("click",()=>checkMove(coord));
+
+        board.appendChild(square);
+    }
+}
+
+function updateBoard(){
+
+    document.querySelectorAll(".square")
+        .forEach(s=>s.classList.remove("current"));
+
+    const currentField = path[stage-1];
+
+    const currentSquare =
+        document.querySelector(`[data-coord="${currentField}"]`);
+
+    if(currentSquare){
+        currentSquare.classList.add("current");
+    }
+
+    if(stage < instructions.length){
+        document.getElementById("instruction").textContent =
+            instructions[stage];
+    }
+}
+
+function checkMove(clicked){
+
+    if(clicked === path[stage]){
+
+        document.getElementById("message").innerHTML =
+            "✅ Dobrze!";
+
+        stage++;
+
+        if(stage === path.length){
+
+            document.getElementById("instruction").innerHTML =
+                "🏁 META! Gratulacje!";
+
+            document.getElementById("message").innerHTML =
+                "Hasło zdobyte.";
+
+            document.querySelector(
+                `[data-coord="${path[path.length-1]}"]`
+            ).classList.add("meta");
+
+            return;
+        }
+
+        updateBoard();
+
+    } else {
+
+        document.getElementById("message").innerHTML =
+            "❌ Błąd, spróbuj od nowa.";
+    }
+}
+
+updateBoard();
+
+</script>
+
+</body>
+</html>
