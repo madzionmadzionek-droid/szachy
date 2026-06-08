@@ -109,13 +109,13 @@ body{
 .traveler{
     position:absolute;
 
-    width:120%;
-    height:120%;
+    width:130%;
+    height:130%;
 
     object-fit:contain;
 
     left:50%;
-    bottom:-33%;
+    bottom:9%;
 
     transform:translateX(-50%);
 
@@ -217,28 +217,133 @@ let current="A1";
 
 const texts={
 
-A1:`TEKST_A1`,
+A1:`Gdy mój mentor rozpoczynał moje szkolenie, uwielbiał zadawać pytania, <br><br>
+na które nie istniała jedna poprawna odpowiedź.<br><br>
+Doprowadzało mnie to do szaleństwa.<br><br>
+Pamiętam, jak pewnego dnia pokazał mi planszę szachową i zapytał:<br><br>
+„Który ruch jest najlepszy?”<br><br>
+Przez godzinę próbowałem znaleźć właściwą odpowiedź.<br><br>
+On przez godzinę siedział obok i pił herbatę.<br><br>
+Dopiero później zrozumiałem, że pytanie było błędne.<br><br>
+Nie istnieje najlepszy ruch.<br><br>
+Istnieje tylko najlepszy ruch w danym momencie.<br><br>
+Granica działa podobnie.<br><br>
+Każdego dnia trzeba podejmować decyzje przy niepełnych informacjach.<br><br>
+Czasem trzeba zaufać doświadczeniu.<br><br>
+Czasem intuicji.<br><br>
+A czasem zwyczajnie zrobić krok naprzód i sprawdzić, co się wydarzy.<br><br>
+Wiem, że brzmi to mało profesjonalnie.<br><br>
+Ale po trzystu latach przestałem wierzyć ludziom, <br><br>
+którzy twierdzą, że zawsze wiedzą, co robią.<br><br>
+Najbardziej niebezpieczni bywają właśnie oni.<br><br>
+Dzisiejsze zadanie jest prostsze.<br><br>
+Przynajmniej dla mnie.<br><br>
+Dla ciebie zapewne stanie się kolejnym dowodem na to, <br><br>
+że Strażnicy mają bardzo dziwne poczucie rozrywki.<br><br>
+czas sprawdzić, czy potrafisz myśleć jak Strażnik.<br><br>
+Nie martw się, nie będę wymagał od ciebie <br><br>
+rozegrania partii szachów przeciwko arcymistrzowi.<br><br>
+Przynajmniej nie dzisiaj.<br><br>
+Twoje pierwsze zadanie: porusz się jak wieża o 3 pola.<br><br>
+Gdy dotrzesz na właściwe pole, odszukaj kolejną wiadomość.<br><br>
+— Elias<br><br>
+<br><br>
+awaryjne hasło:<br><br>
+WIEŻA<br><br>
 
-D1:`TEKST_D1`,
+`,
 
-F3:`TEKST_F3`,
+D1:`Dobrze.<br><br>
+Niektóre decyzje mają tylko jedną poprawną odpowiedź.<br><br>
+Większość ma ich znacznie więcej.<br><br>
+Dlatego nie przejmuj się, jeżeli nie jesteś pewien kierunku.<br><br>
+Najważniejsze jest, by zrobić następny krok.<br><br>
+Porusz się jak goniec o 2 pola.<br><br>
+— Elias<br><br>
+`,
 
-F8:`TEKST_F8`,
+F3:`Czas sprawdzić, <br><br>czy potrafisz myśleć jak Strażnik.<br><br>
+Porusz się jak wieża o 5 pól.<br><br>
+Gdy dotrzesz na właściwe pole, <br><br>odszukaj kolejną wiadomość.<br><br>
+— Elias<br><br>
+`,
 
-E6:`TEKST_E6`,
+F8:`Zaczynam podejrzewać, <br><br>że jednak dasz sobie radę.<br><br>
+Nie mów tego Kronikarzowi.<br><br>
+Przez miesiąc chodziłby z miną człowieka, <br><br>który miał rację.<br><br>
+Porusz się jak skoczek.<br><br>
+— Elias<br><br>
+`,
 
-META:`TEKST_META`,
+E6:`Nieźle.<br><br>
+Jak dotąd nie zgubiłeś się bardziej <br><br>niż ja podczas pierwszego szkolenia.<br><br>
+To obiecujące.<br><br>
+Porusz się jak goniec o 2 pola.<br><br>
+— Elias<br><br>
+`,
 
-A3:`TEKST_BŁĘDU_A3`,
+META:`Jak zapewne zauważyłeś, istnieje wiele sposobów dotarcia do celu.<br><br>
+To jedna z rzeczy, których nauczyły mnie zarówno szachy, jak i życie.<br><br>
+Czasem liczy się plan.<br><br>
+Czasem improwizacja.<br><br>
+A czasem zwykłe szczęście.<br><br>
+Niezależnie od tego, którą drogę obrałeś, dotarłeś we właściwe miejsce.<br><br>
+Zapamiętaj swoje współrzędne.<br><br>
+Liczby mają znaczenie.<br><br>
+To właśnie tutaj zostawiłem dla ciebie kolejny fragment układanki.<br><br>
+Zabierz go ze sobą.<br><br>
+Przed nami następna Pieczęć.<br><br>
+Tym razem poszukaj starej studni.<br><br>
+Gdy ją odnajdziesz, przyjrzyj się dokładnie jej daszkowi.<br><br>
+Właśnie tam czeka na ciebie kolejna wiadomość.<br><br>
+Powodzenia.<br><br>
+Ale zanim tam pójdziesz zapamiętaj swoją pozycję, liczby mają znaczenie.<br><br>
+— Elias<br><br>
+<br><br>
+awaryjne hasło:<br><br>
+HETMAN<br><br>
+`,
 
-A4:`TEKST_BŁĘDU_A4`,
+A3:`zanim pójdziesz dalej, mam dla ciebie dobrą i złą wiadomość.<br><br>
+Dobra jest taka, że wykonałeś polecenie.<br><br>
+Zła jest taka, że nie doprowadziło cię ono tam, gdzie chciałem.<br><br>
+Wróć do poprzedniego punktu i spróbuj ponownie.<br><br>
+Tym razem wybierz inną drogę.<br><br>
+— Elias<br><br>
+`,
 
-B3:`TEKST_BŁĘDU_B3`,
+A4:`Hm.<br><br>
+To nie tutaj.<br><br>
+Wiem, bo specjalnie sprawdziłem.<br><br>
+Przez chwilę miałem nadzieję, że może jednak to ja się pomyliłem.<br><br>
+Niestety nie tym razem.<br><br>
+Wróć do ostatniej wiadomości i wybierz drugi kierunek.<br><br>
+— Elias<br><br>
+`,
 
-GROUP1:`TEKST_BŁĘDU_GROUP1`,
+B3:`Gdyby to była prawdziwa partia szachów,<br><br>
+właśnie straciłbyś figurę.<br><br>
+Na szczęście to tylko ćwiczenie.<br><br>
+Wróć do poprzedniego ruchu i spróbuj ponownie.<br><br>
+— Elias<br><br>
+`,
+
+GROUP1:`Nie martw się.<br><br>
+Mój mentor twierdził, że człowiek poznaje właściwą drogę głównie dzięki temu, <br><br>że wcześniej wybrał niewłaściwą.<br><br>
+Podejrzewam, że wymyślił to po to, <br><br>żeby pocieszyć mnie podczas szkolenia.<br><br>
+Tak czy inaczej...<br><br>
+To nie jest właściwe pole.<br><br>
+Spróbuj jeszcze raz.<br><br>
+— Elias<br><br>
+`,
 GROUP2:`TEKST_BŁĘDU_GROUP2`,
 
-DEFAULT:`TEKST_BŁĘDU_DEFAULT`
+DEFAULT:`Zastanawiałem się, czy ktoś wybierze tę drogę.<br><br>
+Teraz już znam odpowiedź.<br><br>
+Niestety kolejna wiadomość znajduje się gdzie indziej.<br><br>
+Wróć do poprzedniego punktu.<br><br>
+— Elias<br><br>
+`
 };
 
 const special={
