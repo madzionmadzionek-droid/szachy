@@ -14,7 +14,23 @@ body{
     color:#222;
     overflow-x:hidden;
 }
+@keyframes boardGlow{
+    0%{
+        filter:brightness(1);
+    }
 
+    50%{
+        filter:brightness(1.08);
+    }
+
+    100%{
+        filter:brightness(1);
+    }
+}
+
+.board{
+    animation:boardGlow 6s ease-in-out infinite;
+}
 #game,#story{
     max-width:900px;
     margin:40px auto 0 auto;
